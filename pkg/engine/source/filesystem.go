@@ -3,7 +3,7 @@ package source
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path"
 	"path/filepath"
@@ -255,10 +255,9 @@ func (s *FilesystemSource) GetQueries(queryParameters *QueryInspectorParameters)
 		if err != nil {
 			return queries, nil
 		}
-
 		defer experimentalQueriesFile.Close()
 
-		byteValue, _ := ioutil.ReadAll(experimentalQueriesFile)
+		byteValue, _ := io.ReadAll(experimentalQueriesFile)
 
 		json.Unmarshal(byteValue, &experimentalQueriesPaths)
 
@@ -275,9 +274,9 @@ func (s *FilesystemSource) GetQueries(queryParameters *QueryInspectorParameters)
 					return nil
 				}
 
-				//if in experimental feature flag and not in json
+				// if in experimental feature flag and not in json
 				querypathDir := filepath.Dir(p)
-				//in json
+				// in json
 				inJson := false
 				for _, queryPath := range experimentalQueriesPaths {
 					if strings.Contains(querypathDir, queryPath) {
